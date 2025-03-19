@@ -49,10 +49,6 @@ class TowerOfHanoiVisualizer:
         self.play_button = ttk.Button(control_frame, text="▶ Play", command=self.toggle_auto_play)
         self.play_button.pack(side=tk.LEFT, padx=5)
 
-        # Pause button
-        self.pause_button = ttk.Button(control_frame, text="⏸ Pause", command=self.toggle_pause)
-        self.pause_button.pack(side=tk.LEFT, padx=5)
-        self.pause_button.config(state=tk.DISABLED)
 
         self.move_label = ttk.Label(control_frame, text="Move: 0/0")
         self.move_label.pack(side=tk.LEFT, padx=20)
@@ -101,9 +97,7 @@ class TowerOfHanoiVisualizer:
         self.canvas.delete("all")
         self.move_label.config(text="Move: 0/0")
         self.play_button.config(text="▶ Play")
-        self.pause_button.config(state=tk.DISABLED)
         self.auto_play = False
-        self.paused = False
 
     def initialize_towers(self, num_discs, num_towers):
         self.towers = []
@@ -219,28 +213,17 @@ class TowerOfHanoiVisualizer:
         else:
             self.auto_play = True
             self.paused = False
-            self.play_button.config(text="⏹ Stop")
-            self.pause_button.config(state=tk.NORMAL)
+            self.play_button.config(text="⏸ Pause")
             
             # Start animation in a separate thread
             self.animation_thread = threading.Thread(target=self.animate_moves)
             self.animation_thread.daemon = True
             self.animation_thread.start()
 
-    def toggle_pause(self):
-        if self.auto_play:
-            self.paused = not self.paused
-            if self.paused:
-                self.pause_button.config(text="▶ Resume")
-            else:
-                self.pause_button.config(text="⏸ Pause")
-
     def stop_animation(self):
         self.auto_play = False
         self.paused = False
         self.play_button.config(text="▶ Play")
-        self.pause_button.config(state=tk.DISABLED)
-        self.pause_button.config(text="⏸ Pause")
         
         # Wait for animation thread to finish
         if self.animation_thread and self.animation_thread.is_alive():

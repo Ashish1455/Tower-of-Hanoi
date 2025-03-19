@@ -65,5 +65,5 @@ if __name__ == '__main__':
     for i in range(num_discs, 0, -1):
         towers[0].push(i)
     
-    hanoi(towers, 0, num_towers-1, num_discs, num_towers)
+    solve_hanoi(towers, 0, num_towers-1, num_discs, num_towers)
     print(towers)
