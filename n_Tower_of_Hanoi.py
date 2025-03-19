@@ -53,3 +53,17 @@ def solve_hanoi(towers, begin, end, n, t, move_function=None):
             hanoi3(temp, end, begin, n - 1)
 
     hanoi(begin, end, n, t)
+if __name__ == '__main__':
+    num_discs: int = int(input("Number of Discs: "))
+    num_towers: int = int(input('Number of Towers: '))
+    
+    towers = []
+    for i in range(num_towers):
+        temp: Stack[int] = Stack()
+        towers.append(temp)
+    
+    for i in range(num_discs, 0, -1):
+        towers[0].push(i)
+    
+    hanoi(towers, 0, num_towers-1, num_discs, num_towers)
+    print(towers)
