@@ -26,35 +26,30 @@ class Stack(Generic[T]):
     def __repr__(self):
         return repr(self._container)
 
-def hanoi(towers, begin: int, end: int, n: int, t: int):
-    for i in range(2, t-1):
-        towers[i].push(towers[begin].pop())
-    
-    hanoi3(towers[0], towers[t-1], towers[1], n-t+3)
-    
-    for i in range(t-2, 1, -1):
-        towers[end].push(towers[i].pop())
+def solve_hanoi(towers, begin, end, n, t, move_function=None):
+    def hanoi(begin, end, n, t):
+        count = n//(t-2)
+        
+        for i in range(2, t-1):
+            hanoi3(towers[0], towers[t-i], towers[1], count)
+        
+        hanoi3(towers[0], towers[t-1], towers[1], n-(count*(t-3)))
+        
+        for i in range(t-2, 1, -1):
+            hanoi3(towers[t-i], towers[t-1], towers[1], count)
 
-def hanoi3(begin: Stack[int], end: Stack[int], temp: Stack[int], n: int) -> None:
-    if n == 1:
-        end.push(begin.pop())
-    else:
-        hanoi3(begin, temp, end, n - 1)
-        hanoi3(begin, end, temp, 1)
-        hanoi3(temp, end, begin, n - 1)
+    def hanoi3(begin, end, temp, n):
+        if n == 0:
+            return
+        
+        if n == 1:
+            if move_function:
+                move_function(begin, end)
+            else:
+                end.push(begin.pop())
+        else:
+            hanoi3(begin, temp, end, n - 1)
+            hanoi3(begin, end, temp, 1)
+            hanoi3(temp, end, begin, n - 1)
 
-# Command line version
-if __name__ == '__main__':
-    num_discs: int = int(input("Number of Discs: "))
-    num_towers: int = int(input('Number of Towers: '))
-    
-    towers = []
-    for i in range(num_towers):
-        temp: Stack[int] = Stack()
-        towers.append(temp)
-    
-    for i in range(num_discs, 0, -1):
-        towers[0].push(i)
-    
-    hanoi(towers, 0, num_towers-1, num_discs, num_towers)
-    print(towers)
+    hanoi(begin, end, n, t)
